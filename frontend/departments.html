@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1d4ed8" />
+  <title>Departments – PES Hospital</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- ── Header ────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="header-inner">
+      <span class="header-logo">🏥</span>
+      <div>
+        <div class="header-title">Departments</div>
+        <div class="header-sub">Browse by floor · tap "→ Go" to navigate</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Main ──────────────────────────────────────────────── -->
+  <main>
+    <!-- Sticky floor tabs -->
+    <div style="
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+      position: sticky;
+      top: 54px;
+      z-index: 50;
+    ">
+      <div class="floor-tabs" id="floor-tabs"></div>
+    </div>
+
+    <div class="container" style="padding-top: 20px;">
+
+      <!-- Floor heading -->
+      <div class="section-title" id="floor-title">Ground Floor</div>
+
+      <!-- Department list -->
+      <div id="dept-list" class="steps-list">
+        <!-- Populated by departments.js -->
+      </div>
+
+      <!-- Empty state (hidden by default) -->
+      <div id="dept-empty" class="empty-state" style="display:none;">
+        <span class="empty-state-icon">🏥</span>
+        No departments found on this floor.
+      </div>
+
+    </div><!-- /container -->
+  </main>
+
+  <!-- ── Bottom Navigation ──────────────────────────────────── -->
+  <nav class="bottom-nav">
+    <a href="/index.html">
+      <span class="nav-icon">🏠</span>
+      Navigate
+    </a>
+    <a href="/departments.html" class="active">
+      <span class="nav-icon">🏥</span>
+      Departments
+    </a>
+    <a href="tel:08012345678">
+      <span class="nav-icon">🚨</span>
+      Emergency
+    </a>
+  </nav>
+
+  <!-- ── Scripts ───────────────────────────────────────────── -->
+  <script src="/js/api.js"></script>
+  <script src="/js/departments.js"></script>
+</body>
+</html>

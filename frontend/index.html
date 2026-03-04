@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1d4ed8" />
+  <title>PES Hospital – Navigation</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- ── Header ────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="header-inner">
+      <span class="header-logo">🏥</span>
+      <div>
+        <div class="header-title">PES Hospital</div>
+        <div class="header-sub">Electronic City, Bangalore</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Main ──────────────────────────────────────────────── -->
+  <main>
+    <!-- Hero strip -->
+    <div class="hero">
+      <div class="container">
+        <div class="hero-title">Find Your Way</div>
+        <div class="hero-sub">Get step-by-step directions inside the hospital</div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <!-- ── Navigation Form ─────────────────────────────────── -->
+      <div class="card">
+
+        <!-- FROM -->
+        <div class="section-title">Your Current Location</div>
+        <div class="search-wrap" id="from-wrap">
+          <div class="search-input-row">
+            <span class="search-icon">📍</span>
+            <input
+              id="from-input"
+              class="search-input"
+              type="text"
+              placeholder="e.g. Reception, Main Entrance…"
+              autocomplete="off"
+            />
+            <div id="from-clear" class="search-clear" style="display:none">✕</div>
+          </div>
+          <div id="from-dropdown" class="autocomplete-dropdown" style="display:none"></div>
+        </div>
+
+        <!-- Swap arrow -->
+        <div class="flex items-center" style="margin: 10px 0; padding-left: 26px; gap: 8px;">
+          <div style="flex:1; height:1px; background: var(--border);"></div>
+          <span style="font-size:18px; color: var(--muted);">↕</span>
+          <div style="flex:1; height:1px; background: var(--border);"></div>
+        </div>
+
+        <!-- TO -->
+        <div class="section-title">Destination</div>
+        <div class="search-wrap" id="to-wrap">
+          <div class="search-input-row">
+            <span class="search-icon">🎯</span>
+            <input
+              id="to-input"
+              class="search-input"
+              type="text"
+              placeholder="e.g. Cardiology, OPD, Pharmacy…"
+              autocomplete="off"
+            />
+            <div id="to-clear" class="search-clear" style="display:none">✕</div>
+          </div>
+          <div id="to-dropdown" class="autocomplete-dropdown" style="display:none"></div>
+        </div>
+
+        <!-- Accessible toggle -->
+        <label class="toggle-row" style="margin-top: 14px;">
+          <input type="checkbox" id="accessible" />
+          <div class="toggle-track"></div>
+          <span class="toggle-label">♿ Accessible route (elevator only)</span>
+        </label>
+
+        <!-- CTA -->
+        <button id="directions-btn" class="btn btn-primary" style="margin-top:16px;">
+          <span id="btn-text">🗺️ Get Directions</span>
+        </button>
+      </div>
+
+      <!-- ── Quick Access ───────────────────────────────────── -->
+      <div class="mt-24">
+        <div class="section-title">Quick Access</div>
+        <div class="chip-row">
+          <button class="chip" data-code="GF-EMG"  data-name="Emergency Department"      data-floor="0">🚨 Emergency</button>
+          <button class="chip" data-code="GF-REC"  data-name="Reception &amp; Information Desk" data-floor="0">🛎️ Reception</button>
+          <button class="chip" data-code="GF-PHA"  data-name="Pharmacy"                 data-floor="0">💊 Pharmacy</button>
+          <button class="chip" data-code="1F-GMED" data-name="OPD – General Medicine"   data-floor="1">🩺 General OPD</button>
+          <button class="chip" data-code="3F-CARD" data-name="OPD – Cardiology"         data-floor="3">❤️ Cardiology</button>
+          <button class="chip" data-code="1F-LAB"  data-name="Blood Collection &amp; Pathology Lab" data-floor="1">🧪 Lab</button>
+          <button class="chip" data-code="1F-XRAY" data-name="Radiology &amp; Imaging"  data-floor="1">🩻 Radiology</button>
+          <button class="chip" data-code="4F-GYN"  data-name="OPD – Gynecology &amp; Obstetrics" data-floor="4">👶 Gynecology</button>
+        </div>
+      </div>
+
+      <!-- ── Info banner ─────────────────────────────────────── -->
+      <div class="mt-24 card" style="display:flex; gap:12px; align-items:flex-start;">
+        <span style="font-size:24px;">📞</span>
+        <div>
+          <div style="font-size:14px; font-weight:600; color:var(--text);">Need help?</div>
+          <div class="text-muted text-sm mt-4">Call our helpdesk: <a href="tel:08012345600" style="color:var(--blue); font-weight:600;">080-12345600</a></div>
+          <div class="text-muted text-sm mt-4">Emergency: <a href="tel:08012345678" style="color:var(--red); font-weight:600;">080-12345678</a></div>
+        </div>
+      </div>
+
+    </div><!-- /container -->
+  </main>
+
+  <!-- ── Bottom Navigation ──────────────────────────────────── -->
+  <nav class="bottom-nav">
+    <a href="/index.html" class="active">
+      <span class="nav-icon">🏠</span>
+      Navigate
+    </a>
+    <a href="/departments.html">
+      <span class="nav-icon">🏥</span>
+      Departments
+    </a>
+    <a href="tel:08012345678">
+      <span class="nav-icon">🚨</span>
+      Emergency
+    </a>
+  </nav>
+
+  <!-- ── Toast ─────────────────────────────────────────────── -->
+  <div id="toast" class="toast"></div>
+
+  <!-- ── Scripts ───────────────────────────────────────────── -->
+  <script src="/js/api.js"></script>
+  <script src="/js/home.js"></script>
+</body>
+</html>
