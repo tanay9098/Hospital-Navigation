@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1d4ed8" />
+  <title>Directions – PES Hospital</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- ── Header ────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="header-inner">
+      <span class="header-logo">🏥</span>
+      <div>
+        <div class="header-title">Directions</div>
+        <div class="header-sub">PES Hospital Navigation</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Main ──────────────────────────────────────────────── -->
+  <main>
+    <div class="container" style="padding-top: 20px;">
+
+      <!-- Back button -->
+      <a href="/index.html" class="back-btn">← Back to Search</a>
+
+      <!-- ── Route summary ──────────────────────────────────── -->
+      <div class="route-banner">
+        <!-- From → To -->
+        <div class="route-banner-row">
+          <span id="from-name">—</span>
+          <span class="route-banner-arrow">→</span>
+          <span id="to-name">—</span>
+        </div>
+        <div style="font-size:12px; opacity:.7; margin-top:4px;">
+          <span id="from-floor">—</span>
+          &nbsp;→&nbsp;
+          <span id="to-floor">—</span>
+        </div>
+
+        <!-- Meta row -->
+        <div class="route-banner-meta">
+          <div class="route-meta-item">🕐 <span id="route-time">—</span></div>
+          <div class="route-meta-item">📏 <span id="route-distance">—</span></div>
+          <div class="route-meta-item">🔢 <span id="route-steps">—</span></div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="flex" style="gap:8px; margin-top:14px; flex-wrap:wrap;">
+          <button
+            id="read-all-btn"
+            class="btn btn-outline"
+            style="background:rgba(255,255,255,.15); border-color:rgba(255,255,255,.5); color:#fff; font-size:13px; padding:8px 14px;"
+          >
+            🔊 Read Full Route
+          </button>
+          <button
+            id="share-btn"
+            class="btn btn-outline"
+            style="background:rgba(255,255,255,.15); border-color:rgba(255,255,255,.5); color:#fff; font-size:13px; padding:8px 14px;"
+          >
+            📋 Copy Directions
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Steps ──────────────────────────────────────────── -->
+      <div style="margin-top:20px;">
+        <div class="section-title">Step-by-Step Directions</div>
+        <div id="steps-list" class="steps-list"></div>
+      </div>
+
+      <!-- ── Footer nudge ───────────────────────────────────── -->
+      <div class="mt-24 card" style="display:flex; gap:10px; align-items:center;">
+        <span style="font-size:22px;">♿</span>
+        <div class="text-sm text-muted">
+          Need an accessible route?
+          <a href="/index.html" style="color:var(--blue); font-weight:600;">Go back</a>
+          and enable the <strong>wheelchair toggle</strong>.
+        </div>
+      </div>
+
+    </div><!-- /container -->
+  </main>
+
+  <!-- ── Bottom Navigation ──────────────────────────────────── -->
+  <nav class="bottom-nav">
+    <a href="/index.html" class="active">
+      <span class="nav-icon">🏠</span>
+      Navigate
+    </a>
+    <a href="/departments.html">
+      <span class="nav-icon">🏥</span>
+      Departments
+    </a>
+    <a href="tel:08012345678">
+      <span class="nav-icon">🚨</span>
+      Emergency
+    </a>
+  </nav>
+
+  <!-- ── Toast ─────────────────────────────────────────────── -->
+  <div id="toast" class="toast"></div>
+
+  <!-- ── Scripts ───────────────────────────────────────────── -->
+  <script src="/js/api.js"></script>
+  <script src="/js/navigate.js"></script>
+</body>
+</html>
