@@ -17,8 +17,10 @@ logs/
 *.log
 npm-debug.log*
 
-# ── NeDB data files (runtime-generated, not committed) ────
-data/nedb/
+# ── SQLite database file (runtime-generated, not committed) ──
+data/hospital.db
+data/hospital.db-shm
+data/hospital.db-wal
 
 # ── OS & Editor junk ──────────────────────────────────────
 .DS_Store

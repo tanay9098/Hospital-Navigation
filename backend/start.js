@@ -1,10 +1,10 @@
 /**
- * start.js – All-in-one launcher for local development
- * -------------------------------------------------------
- * 1. Seeds NeDB with the hospital blueprint (if not already seeded)
- * 2. Starts the Express server
+ * start.js – All-in-one launcher
+ * --------------------------------
+ * 1. Seeds hospital.db with the hospital blueprint on first run.
+ * 2. Starts the Express server.
  *
- * No external database required – NeDB stores data in backend/data/nedb/.
+ * Data is stored in backend/data/hospital.db (SQLite file).
  * Run:  node start.js   (or: npm start)
  */
 
@@ -12,15 +12,13 @@ require('dotenv').config();
 const { spawn } = require('child_process');
 const path      = require('path');
 const fs        = require('fs');
-
-const DB_DIR        = path.join(__dirname, 'data/nedb');
-const LOCATIONS_DB  = path.join(DB_DIR, 'locations.db');
+const { DB_FILE } = require('./db/sqlite');
 
 async function main() {
-  const alreadySeeded = fs.existsSync(LOCATIONS_DB) && fs.statSync(LOCATIONS_DB).size > 0;
+  const needsSeed = !fs.existsSync(DB_FILE) || fs.statSync(DB_FILE).size === 0;
 
-  if (!alreadySeeded) {
-    console.log('[1/2] Seeding hospital blueprint into NeDB...\n');
+  if (needsSeed) {
+    console.log('[1/2] Seeding hospital blueprint into SQLite...\n');
 
     await new Promise((resolve, reject) => {
       const seeder = spawn(process.execPath, ['data/seedDatabase.js'], {
@@ -28,7 +26,6 @@ async function main() {
         env: { ...process.env },
         stdio: 'inherit',
       });
-
       seeder.on('close', (code) => {
         if (code === 0) resolve();
         else reject(new Error(`Seeder exited with code ${code}`));
@@ -37,10 +34,9 @@ async function main() {
 
     console.log('\n[2/2] Starting Express server...\n');
   } else {
-    console.log('[1/1] NeDB already seeded. Starting Express server...\n');
+    console.log('[1/1] SQLite DB found. Starting Express server...\n');
   }
 
-  // server.js calls connectDB() internally before listening
   require('./server');
 }
 
