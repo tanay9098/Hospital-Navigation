@@ -1,15 +1,23 @@
-const mongoose = require('mongoose');
+/**
+ * Database initialisation – NeDB edition.
+ *
+ * Loads all three datastores from disk and creates the indexes that the
+ * application depends on.  Called once at startup from server.js.
+ */
+const { locations, departments, ivrSessions } = require('../db/stores');
 
 const connectDB = async () => {
-  const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/pes_hospital_nav';
+  // Load datastore files from disk (creates them if they don't exist yet)
+  await locations.loadDatabaseAsync();
+  await departments.loadDatabaseAsync();
+  await ivrSessions.loadDatabaseAsync();
 
-  try {
-    const conn = await mongoose.connect(uri);
-    console.log(`MongoDB connected: ${conn.connection.host}`);
-  } catch (err) {
-    console.error(`MongoDB connection error: ${err.message}`);
-    process.exit(1);
-  }
+  // Unique index on location code (replaces Mongoose unique:true)
+  await locations.ensureIndexAsync({ fieldName: 'code', unique: true });
+  // Unique index on IVR call ID
+  await ivrSessions.ensureIndexAsync({ fieldName: 'callSid', unique: true });
+
+  console.log('NeDB datastores loaded and indexed.');
 };
 
 module.exports = connectDB;
