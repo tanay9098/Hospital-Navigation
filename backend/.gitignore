@@ -17,6 +17,9 @@ logs/
 *.log
 npm-debug.log*
 
+# ── NeDB data files (runtime-generated, not committed) ────
+data/nedb/
+
 # ── OS & Editor junk ──────────────────────────────────────
 .DS_Store
 Thumbs.db
