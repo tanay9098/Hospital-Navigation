@@ -1,7 +1,7 @@
 /**
- * Database Seeder – NeDB edition
- * --------------------------------
- * Populates NeDB with the complete PES Hospital blueprint:
+ * Database Seeder – SQLite edition
+ * ----------------------------------
+ * Populates hospital.db with the complete PES Hospital blueprint:
  *   – All location nodes (with bidirectional connections)
  *   – All department metadata
  *
@@ -10,13 +10,11 @@
 
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
-// Initialise NeDB datastores (must happen before requiring models)
-const connectDB  = require('../configs/database');
-const Location   = require('../models/Location');
-const Department = require('../models/Department');
+const connectDB    = require('../configs/database');
+const Location     = require('../models/Location');
+const Department   = require('../models/Department');
 const { locations, connections, departments } = require('./hospitalBlueprint');
 
-// ── Direction reversal map ────────────────────────────────────────────────────
 const REVERSE = {
   north: 'south', south: 'north',
   east:  'west',  west:  'east',
@@ -26,16 +24,14 @@ const REVERSE = {
 };
 
 async function seed() {
-  // Load NeDB datastores from disk
   await connectDB();
-  console.log('NeDB datastores ready.');
 
   // ── Clear existing data ───────────────────────────────────────────────────
   await Location.deleteMany({});
   await Department.deleteMany({});
-  console.log('Cleared existing Location and Department documents.');
+  console.log('Cleared existing data.');
 
-  // ── Build adjacency map from the connection list ──────────────────────────
+  // ── Build bidirectional adjacency map ─────────────────────────────────────
   const adjacencyMap = {};
 
   for (const [from, to, dist, dir] of connections) {
@@ -46,12 +42,13 @@ async function seed() {
     adjacencyMap[to].push  ({ locationCode: from, distance: dist, direction: REVERSE[dir] || dir });
   }
 
-  // ── Insert locations with their connections + schema defaults ────────────
+  // ── Insert locations ──────────────────────────────────────────────────────
   const locationDocs = locations.map((loc) => ({
-    isActive:    true,
+    isActive:     true,
     isAccessible: true,
-    description: '',
-    ivrMenuNumber: null,
+    description:  '',
+    ivrMenuNumber:null,
+    coordinates:  { x: 0, y: 0 },
     ...loc,
     connections: adjacencyMap[loc.code] || [],
   }));
@@ -59,11 +56,11 @@ async function seed() {
   await Location.insertMany(locationDocs);
   console.log(`Inserted ${locationDocs.length} locations.`);
 
-  // ── Insert departments (with schema defaults) ─────────────────────────────
+  // ── Insert departments ────────────────────────────────────────────────────
   const departmentDocs = departments.map((dept) => ({
-    isActive:     true,
-    description:  '',
-    specialties:  [],
+    isActive:      true,
+    description:   '',
+    specialties:   [],
     contactNumber: '',
     ivrMenuNumber: null,
     workingHours: {
@@ -77,15 +74,14 @@ async function seed() {
   await Department.insertMany(departmentDocs);
   console.log(`Inserted ${departmentDocs.length} departments.`);
 
-  // ── Summary ───────────────────────────────────────────────────────────────
-  const totalEdges = Object.values(adjacencyMap).reduce((s, arr) => s + arr.length, 0);
+  const totalEdges = Object.values(adjacencyMap).reduce((s, a) => s + a.length, 0);
   console.log(`\n✓ Seed complete.`);
   console.log(`  Locations  : ${locationDocs.length}`);
   console.log(`  Edges      : ${totalEdges} (bidirectional)`);
   console.log(`  Departments: ${departmentDocs.length}`);
 
   const gfCor = adjacencyMap['GF-COR'] || [];
-  console.log(`\n  Ground Floor Central Corridor connects to ${gfCor.length} neighbour(s).`);
+  console.log(`\n  Ground Floor Central Corridor → ${gfCor.length} neighbours.`);
   console.log('Done.\n');
 }
 

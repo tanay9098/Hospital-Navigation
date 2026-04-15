@@ -1,23 +1,14 @@
 /**
- * Database initialisation – NeDB edition.
- *
- * Loads all three datastores from disk and creates the indexes that the
- * application depends on.  Called once at startup from server.js.
+ * Database initialisation – SQLite edition.
+ * Opens (or creates) backend/data/hospital.db and ensures the schema exists.
+ * Called once at startup from server.js before the HTTP server starts.
  */
-const { locations, departments, ivrSessions } = require('../db/stores');
+
+const { init, DB_FILE } = require('../db/sqlite');
 
 const connectDB = async () => {
-  // Load datastore files from disk (creates them if they don't exist yet)
-  await locations.loadDatabaseAsync();
-  await departments.loadDatabaseAsync();
-  await ivrSessions.loadDatabaseAsync();
-
-  // Unique index on location code (replaces Mongoose unique:true)
-  await locations.ensureIndexAsync({ fieldName: 'code', unique: true });
-  // Unique index on IVR call ID
-  await ivrSessions.ensureIndexAsync({ fieldName: 'callSid', unique: true });
-
-  console.log('NeDB datastores loaded and indexed.');
+  init();
+  console.log(`SQLite database ready: ${DB_FILE}`);
 };
 
 module.exports = connectDB;
