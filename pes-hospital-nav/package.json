@@ -11,7 +11,8 @@
     "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
-    "migrate": "ts-node src/db/migrate.ts"
+    "migrate": "ts-node src/db/migrate.ts",
+    "seed": "ts-node src/db/seeds/01_hospital_structure.ts"
   },
   "dependencies": {
     "better-sqlite3": "^9.4.3",
