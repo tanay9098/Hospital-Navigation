@@ -151,3 +151,81 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 departments.forEach(d => insertDept.run(...d));
 
 console.log("Hospital structure seed completed.");
+
+/* =============================
+   DEPARTMENT TRANSLATIONS
+============================= */
+
+const translations = [
+
+/* Emergency */
+[
+  "DT1",
+  "D2",
+  "kn",
+  "ತುರ್ತು ಸೇವೆ",
+  "ತುರ್ತು",
+  "ತುರ್ತು ಚಿಕಿತ್ಸಾ ವಿಭಾಗ",
+  "thuruthu seve"
+],
+[
+  "DT2",
+  "D2",
+  "hi",
+  "आपातकालीन विभाग",
+  "आपातकालीन",
+  "आपातकालीन चिकित्सा विभाग",
+  "aapatkaaleen vibhaag"
+],
+
+/* Pharmacy */
+[
+  "DT3",
+  "D4",
+  "kn",
+  "ಔಷಧಾಲಯ",
+  "ಫಾರ್ಮಸಿ",
+  "ಔಷಧ ವಿತರಣಾ ಕೇಂದ್ರ",
+  "aushadhaalaya"
+],
+[
+  "DT4",
+  "D4",
+  "hi",
+  "फार्मेसी",
+  "फार्मेसी",
+  "दवा वितरण केंद्र",
+  "pharmacy"
+],
+
+/* Radiology */
+[
+  "DT5",
+  "D31",
+  "kn",
+  "ರೇಡಿಯಾಲಜಿ",
+  "ರೇಡಿಯೋ",
+  "ವೈದ್ಯಕೀಯ ಚಿತ್ರಣ ವಿಭಾಗ",
+  "radiyoloji"
+],
+[
+  "DT6",
+  "D31",
+  "hi",
+  "रेडियोलॉजी",
+  "रेडियो",
+  "चिकित्सीय इमेजिंग विभाग",
+  "radiology"
+]
+
+];
+
+const insertTranslation = db.prepare(`
+INSERT OR IGNORE INTO DEPT_TRANSLATION
+(id, department_id, language_id, name, short_name, description, tts_phonetic)
+VALUES (?, ?, ?, ?, ?, ?, ?)
+`);
+
+translations.forEach(t => insertTranslation.run(...t));
+
+console.log("Department translations seeded.");
