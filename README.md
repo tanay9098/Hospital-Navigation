@@ -3,7 +3,7 @@
 Backend API for the **PES Hospital Electronic City Indoor Navigation System**.
 This service powers indoor navigation, department lookup, and IVRS-based guidance for patients and visitors.
 
-The system exposes REST APIs that allow clients (mobile apps, web dashboards, kiosks, and IVRS systems) to navigate the hospital building and locate departments, services, and facilities.
+The system exposes REST APIs that allow patients and visitors to navigate the hospital building and locate departments, services, and facilities.
 
 ---
 
