@@ -80,9 +80,9 @@ class DepartmentService {
       params.push(filters.category);
     }
 
-    if (filters.floor) {
-      query += ` AND f.id = ?`;
-      params.push(filters.floor);
+    if (filters.floor !== undefined && filters.floor !== '') {
+      query += ` AND f.floor_number = ?`;
+      params.push(Number(filters.floor));
     }
 
     query += " ORDER BY d.name";
