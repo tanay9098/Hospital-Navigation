@@ -14,6 +14,7 @@
     "migrate": "ts-node src/db/migrate.ts",
     "seed": "ts-node src/db/seeds/01_hospital_structure.ts",
     "seed:nav": "ts-node src/db/seeds/02_navigation_ground_floor.ts",
+    "seed:nav:floor1": "ts-node src/db/seeds/04_nav_floor1.ts",
     "seed:lang": "ts-node src/db/seeds/03_languages_voice_prompts.ts"
   },
   "dependencies": {
