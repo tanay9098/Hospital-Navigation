@@ -39,13 +39,16 @@ CREATE TABLE IF NOT EXISTS NAV_NODE (
         'RECEPTION',
         'EXIT',
         'RESTROOM',
-        'WAITING_AREA'
+        'WAITING_AREA',
+        'RAMP'
     )),
     x_coord REAL,
     y_coord REAL,
     floor_number INTEGER,
     is_accessible INTEGER DEFAULT 1,
     has_elevator INTEGER DEFAULT 0,
+    is_vertical INTEGER DEFAULT 0,
+    vertical_id TEXT,
 
     FOREIGN KEY (zone_id) REFERENCES ZONE(id),
     FOREIGN KEY (department_id) REFERENCES DEPARTMENT(id)
