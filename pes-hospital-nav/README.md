@@ -88,9 +88,57 @@ npm run format:check # Check formatting without writing
 
 ## API
 
-| Method | Endpoint          | Description        |
-|--------|-------------------|--------------------|
-| GET    | /api/v1/health    | Health check       |
+Base URL: `http://localhost:{PORT}`
+
+All endpoints are prefixed with `/api/v1`.
+
+### Health
+
+| Method | Endpoint        | Description  |
+|--------|-----------------|--------------|
+| GET    | /api/v1/health  | Health check |
+
+### Floors
+
+| Method | Endpoint                          | Description                          |
+|--------|-----------------------------------|--------------------------------------|
+| GET    | /api/v1/api/floors                | Get all floors                       |
+| GET    | /api/v1/api/floors?is_active=1    | Get only active floors               |
+| GET    | /api/v1/api/floors/:id/departments | Get all departments on a floor (by floor ID e.g. `F0`) |
+
+### Departments
+
+| Method | Endpoint                              | Description                              |
+|--------|---------------------------------------|------------------------------------------|
+| GET    | /api/v1/api/departments               | Get all departments                      |
+| GET    | /api/v1/api/departments?search=       | Search departments by name or short name |
+| GET    | /api/v1/api/departments?category=     | Filter departments by category           |
+| GET    | /api/v1/api/departments?floor=        | Filter departments by floor number (e.g. `0` for ground floor) |
+| GET    | /api/v1/api/departments/:id           | Get department by ID                     |
+| GET    | /api/v1/api/departments/ivrs/:shortcode | Get department by IVRS shortcode       |
+
+### Navigation
+
+`POST /api/v1/api/navigate`
+
+Request body:
+```json
+{
+  "start_node_id": "N1",
+  "dest_dept_id": "D41",
+  "wheelchair_mode": false,
+  "language_code": "en"
+}
+```
+
+### IVRS
+
+| Method | Endpoint                                  | Description               |
+|--------|-------------------------------------------|---------------------------|
+| POST   | /api/v1/api/ivrs/call/start               | Start an IVRS call        |
+| POST   | /api/v1/api/ivrs/call/:call_id/interact   | Log a DTMF/speech interaction |
+| POST   | /api/v1/api/ivrs/call/:call_id/end        | End an IVRS call          |
+| GET    | /api/v1/api/ivrs/menu                     | Get IVRS menu options     |
 
 ---
 
