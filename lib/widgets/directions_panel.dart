@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:hospital_nav/models/navigation_instruction.dart';
 import 'package:hospital_nav/providers/navigation_provider.dart';
 import 'package:hospital_nav/providers/simulation_provider.dart';
+import 'package:hospital_nav/providers/settings_provider.dart';
+import 'package:hospital_nav/services/direction_generator.dart';
 
 /// A collapsible panel that shows step-by-step navigation directions.
 /// Only visible when an active route exists.
@@ -15,21 +17,40 @@ class DirectionsPanel extends StatefulWidget {
 
 class _DirectionsPanelState extends State<DirectionsPanel> {
   bool _isExpanded = false;
+  int _lastSpokenStepIndex = -1;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Consumer2<NavigationProvider, SimulationProvider>(
-      builder: (context, navProvider, simProvider, child) {
+    return Consumer3<NavigationProvider, SimulationProvider, SettingsProvider>(
+      builder: (context, navProvider, simProvider, settingsProvider, child) {
         // Use the simulation's own stored route for stable step tracking,
         // falling back to the nav provider's route when not simulating.
         final route = simProvider.currentRoute ?? navProvider.activeRoute;
-        if (route == null || route.steps.isEmpty) {
+        if (route == null) {
           return const SizedBox.shrink();
         }
 
-        final steps = route.steps;
+        final lang = settingsProvider.selectedLanguageCode.isEmpty
+            ? 'en'
+            : settingsProvider.selectedLanguageCode;
+
+        // Generate localized steps on-the-fly from stored PathAnalysis
+        List<NavigationInstruction> steps;
+        if (route.analysis != null) {
+          final generator = DirectionGenerator(settingsProvider.instructionFormatter);
+          steps = generator.generate(
+            path: route.path,
+            analysis: route.analysis!,
+          );
+        } else {
+          steps = route.steps;
+        }
+        
+        if (steps.isEmpty) {
+          return const SizedBox.shrink();
+        }
         
         // Dynamically compute active step based on simulation index
         int activeStepIndex = 0;
@@ -44,6 +65,12 @@ class _DirectionsPanelState extends State<DirectionsPanel> {
         
         final currentStep = steps[activeStepIndex];
 
+        // TTS: speak the localized instruction text
+        if (simProvider.isSimulating && _lastSpokenStepIndex != activeStepIndex) {
+          _lastSpokenStepIndex = activeStepIndex;
+          settingsProvider.speak(currentStep.textForLang(lang));
+        }
+
         return AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOutCubic,
@@ -52,7 +79,7 @@ class _DirectionsPanelState extends State<DirectionsPanel> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.15),
+                color: Colors.black.withOpacity(0.15),
                 blurRadius: 16,
                 offset: const Offset(0, -8), // Shadow upwards
               ),
@@ -77,20 +104,21 @@ class _DirectionsPanelState extends State<DirectionsPanel> {
                       
                       return InkWell(
                         onTap: () {
-                          // Jump to this instruction
+                          // Jump to this instruction and speak it
                           simProvider.jumpToInstruction(step.pathIndex);
+                          settingsProvider.speak(step.textForLang(lang));
                         },
                         child: ListTile(
                           leading: Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: _stepColor(step.maneuver, isActive).withValues(alpha: isActive ? 0.3 : 0.15),
+                              color: _stepColor(step.maneuver, isActive).withOpacity(isActive ? 0.3 : 0.15),
                               shape: BoxShape.circle,
                             ),
                             child: Icon(step.icon, size: 20, color: _stepColor(step.maneuver, isActive)),
                           ),
                           title: Text(
-                            step.text,
+                            step.textForLang(lang),
                             style: TextStyle(
                                 fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
                                 color: isPast ? Colors.grey : Colors.black,
@@ -118,27 +146,27 @@ class _DirectionsPanelState extends State<DirectionsPanel> {
                     Row(
                       children: [
                         Text(
-                          'Preference:',
+                          settingsProvider.translate('preference_label'),
                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey.shade600),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: SegmentedButton<String>(
-                            segments: const [
+                            segments: [
                               ButtonSegment<String>(
                                 value: 'lift',
                                 icon: Icon(Icons.elevator, size: 16),
-                                label: Text('Lift', style: TextStyle(fontSize: 13)),
+                                label: Text(settingsProvider.translate('lift'), style: const TextStyle(fontSize: 13)),
                               ),
                               ButtonSegment<String>(
                                 value: 'stairs',
                                 icon: Icon(Icons.stairs, size: 16),
-                                label: Text('Stairs', style: TextStyle(fontSize: 13)),
+                                label: Text(settingsProvider.translate('stairs_only'), style: const TextStyle(fontSize: 13)),
                               ),
                               ButtonSegment<String>(
                                 value: 'ramp',
                                 icon: Icon(Icons.accessible, size: 16),
-                                label: Text('Ramp', style: TextStyle(fontSize: 13)),
+                                label: Text(settingsProvider.translate('ramp'), style: const TextStyle(fontSize: 13)),
                               ),
                             ],
                             selected: {navProvider.transitPreference},
@@ -170,7 +198,7 @@ class _DirectionsPanelState extends State<DirectionsPanel> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                             minimumSize: const Size(44, 44),
                           ),
-                          tooltip: 'Stop Navigation',
+                          tooltip: settingsProvider.translate('stop_navigation'),
                         ),
                         const SizedBox(width: 12),
                         // Auto/Manual Toggle
@@ -178,7 +206,11 @@ class _DirectionsPanelState extends State<DirectionsPanel> {
                           child: ElevatedButton.icon(
                             onPressed: () => simProvider.toggleAutoMode(),
                             icon: Icon(simProvider.isAutoMode ? Icons.pause : Icons.play_arrow, size: 18),
-                            label: Text(simProvider.isAutoMode ? 'Pause Simulation' : 'Resume Simulation'),
+                            label: Text(
+                              simProvider.isAutoMode
+                                  ? settingsProvider.translate('pause_simulation')
+                                  : settingsProvider.translate('resume_simulation'),
+                            ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: simProvider.isAutoMode ? Colors.green.shade600 : Colors.blue.shade600,
                               foregroundColor: Colors.white,
@@ -207,7 +239,7 @@ class _DirectionsPanelState extends State<DirectionsPanel> {
                       const SizedBox(width: 16),
                       Expanded(
                         child: Text(
-                          currentStep.text,
+                          currentStep.textForLang(lang),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -217,7 +249,7 @@ class _DirectionsPanelState extends State<DirectionsPanel> {
                       ),
                       Icon(
                         _isExpanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up,
-                        color: Colors.white.withValues(alpha: 0.8),
+                        color: Colors.white.withOpacity(0.8),
                       ),
                     ],
                   ),

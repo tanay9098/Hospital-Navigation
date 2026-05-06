@@ -35,6 +35,12 @@ class NavigationController {
     return normalize(v1) == normalize(v2);
   }
 
+  List<String> _transitOrder(String preferred) {
+    const all = ['lift', 'stairs', 'ramp'];
+    final ordered = <String>[preferred, ...all.where((t) => t != preferred)];
+    return ordered;
+  }
+
   MultiFloorRoute computeRoute({
     required Node startNode,
     required Node destNode,
@@ -55,7 +61,6 @@ class NavigationController {
         startFloorGraph,
         startNode.id,
         destNode.id,
-        transitPreference: transitPreference,
       );
 
       // If we are currently on this floor, return it as currentSegment
@@ -66,45 +71,51 @@ class NavigationController {
       }
     }
 
-    // Multi-floor routing
-    // Find matching vertical nodes
-    List<Node> startVerticals = startFloorGraph.nodes.values
-        .where((n) => n.verticalId != null && n.verticalId!.isNotEmpty)
-        .toList();
-
-    List<Node> destVerticals = destFloorGraph.nodes.values
-        .where((n) => n.verticalId != null && n.verticalId!.isNotEmpty)
-        .toList();
-        
-    // Filter by transit preference
-    startVerticals = startVerticals.where((n) => n.type == transitPreference).toList();
-    destVerticals = destVerticals.where((n) => n.type == transitPreference).toList();
-
+    // Multi-floor routing:
+    // Try preferred transit first, then gracefully fall back if a connector
+    // exists but is disconnected on one of the floors.
     Node? bestStartVertical;
     RouteResult? bestStartSegment;
     RouteResult? bestDestSegment;
-    double minTotalDistance = double.infinity;
 
-    for (var sv in startVerticals) {
-      // Find matching dest vertical using robust matching
-      final dv = destVerticals.firstWhereOrNull(
-        (v) => _isMatchingVertical(v.verticalId, sv.verticalId),
-      );
+    for (final transitType in _transitOrder(transitPreference)) {
+      final startVerticals = startFloorGraph.nodes.values
+          .where((n) => n.verticalId != null && n.verticalId!.isNotEmpty && n.type == transitType)
+          .toList();
 
-      if (dv == null) continue; // No match found for this vertical ID
+      final destVerticals = destFloorGraph.nodes.values
+          .where((n) => n.verticalId != null && n.verticalId!.isNotEmpty && n.type == transitType)
+          .toList();
 
-      // Compute route segments
-      final startSeg = _pathfinder.findPath(startFloorGraph, startNode.id, sv.id, transitPreference: transitPreference);
-      final destSeg = _pathfinder.findPath(destFloorGraph, dv.id, destNode.id, transitPreference: transitPreference);
+      Node? candidateVertical;
+      RouteResult? candidateStart;
+      RouteResult? candidateDest;
+      double minTotalDistance = double.infinity;
 
-      if (startSeg != null && destSeg != null) {
-        double totalDist = startSeg.totalDistance + destSeg.totalDistance;
+      for (var sv in startVerticals) {
+        final dv = destVerticals.firstWhereOrNull(
+          (v) => _isMatchingVertical(v.verticalId, sv.verticalId),
+        );
+        if (dv == null) continue;
+
+        final startSeg = _pathfinder.findPath(startFloorGraph, startNode.id, sv.id);
+        final destSeg = _pathfinder.findPath(destFloorGraph, dv.id, destNode.id);
+        if (startSeg == null || destSeg == null) continue;
+
+        final totalDist = startSeg.totalDistance + destSeg.totalDistance;
         if (totalDist < minTotalDistance) {
           minTotalDistance = totalDist;
-          bestStartVertical = sv;
-          bestStartSegment = startSeg;
-          bestDestSegment = destSeg;
+          candidateVertical = sv;
+          candidateStart = startSeg;
+          candidateDest = destSeg;
         }
+      }
+
+      if (candidateStart != null && candidateDest != null && candidateVertical != null) {
+        bestStartVertical = candidateVertical;
+        bestStartSegment = candidateStart;
+        bestDestSegment = candidateDest;
+        break;
       }
     }
 

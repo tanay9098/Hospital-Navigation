@@ -1,11 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:hospital_nav/providers/navigation_provider.dart';
 import 'package:hospital_nav/providers/simulation_provider.dart';
 import 'package:hospital_nav/widgets/map_view.dart';
 import 'package:hospital_nav/widgets/navigation_panel.dart';
-import 'package:hospital_nav/widgets/pdr_debug_panel.dart';
 import 'package:hospital_nav/widgets/directions_panel.dart';
 import 'package:hospital_nav/widgets/floor_transition_dialog.dart';
 import 'package:hospital_nav/models/floor_config.dart';
@@ -44,7 +42,7 @@ class MapScreen extends StatelessWidget {
             color: Theme.of(context).colorScheme.surface,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: Colors.black.withOpacity(0.1),
                 blurRadius: 10,
                 offset: const Offset(4, 0),
               ),
@@ -64,10 +62,6 @@ class MapScreen extends StatelessWidget {
                 ),
                 
                 const Spacer(),
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: PdrDebugPanel(),
-                ),
               ],
             ),
           ),
@@ -117,24 +111,31 @@ class MapScreen extends StatelessWidget {
                     ),
 
                   // Bottom Panel (Active Navigation Directions)
-                  // Show if simulating OR if a route is active (as a preview)
-                  const Positioned(
-                    bottom: 16,
-                    left: 16,
-                    right: 72, // Space for FABs
-                    child: DirectionsPanel(),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: SafeArea(
+                      top: false,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                        child: const DirectionsPanel(),
+                      ),
+                    ),
                   ),
 
                   // Map Controls (Right Side)
-                  _buildRightControls(context),
+                  Consumer<NavigationProvider>(
+                    builder: (context, navProvider, child) {
+                      final hasRoute = navProvider.activeRoute != null;
+                      return Positioned(
+                        bottom: isNavigating ? 140 : 32, // Move FABs up if panel is showing
+                        right: 16,
+                        child: _buildRightControls(context, hasRoute),
+                      );
+                    },
+                  ),
 
-                  // PDR Debug Panel
-                  if (kDebugMode && !isNavigating)
-                    const Positioned(
-                      top: 140,
-                      left: 16,
-                      child: PdrDebugPanel(),
-                    ),
                 ],
               );
             },
@@ -149,10 +150,12 @@ class MapScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRightControls(BuildContext context) {
-    return Positioned(
+  Widget _buildRightControls(BuildContext context, [bool hasRoute = false]) {
+    return AnimatedPositioned(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOutCubic,
       right: 16,
-      bottom: 16,
+      bottom: hasRoute ? 240 : 16, // Move up if directions panel is active
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -204,7 +207,7 @@ class MapScreen extends StatelessWidget {
                       Container(
                         height: 1,
                         width: 32,
-                        color: Colors.grey.withValues(alpha: 0.2),
+                        color: Colors.grey.withOpacity(0.2),
                       ),
                     );
                   }
@@ -242,7 +245,7 @@ class MapScreen extends StatelessWidget {
         height: 48,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isActive ? theme.colorScheme.primary.withValues(alpha: 0.15) : Colors.transparent,
+          color: isActive ? theme.colorScheme.primary.withOpacity(0.15) : Colors.transparent,
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(isTop ? 24 : 0),
             bottom: Radius.circular(isBottom ? 24 : 0),

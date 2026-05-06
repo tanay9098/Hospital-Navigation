@@ -147,15 +147,13 @@ class PathAnalyzer {
 
   String? _findClosestLandmark(Node pivot, NavGraph graph) {
     const maxPixelRadius = 340.0;
-    final genericNodePattern = RegExp(r'^N\d+$');
 
     Node? bestNode;
     double bestDistSq = double.infinity;
 
     for (final candidate in graph.nodes.values) {
       if (candidate.floor != pivot.floor || candidate.id == pivot.id) continue;
-      if (genericNodePattern.hasMatch(candidate.name)) continue;
-      if (candidate.name.trim().isEmpty) continue;
+      if (candidate.label == null || candidate.label!.isEmpty) continue;
       if (candidate.type != 'room' && candidate.type != 'lift' && candidate.type != 'stairs') continue;
 
       final dx = candidate.x - pivot.x;
@@ -170,6 +168,6 @@ class PathAnalyzer {
     if (bestNode == null || sqrt(bestDistSq) > maxPixelRadius) {
       return null;
     }
-    return bestNode.name.replaceAll('_', ' ');
+    return bestNode.label; // Return the label key, not display text
   }
 }

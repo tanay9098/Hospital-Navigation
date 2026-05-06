@@ -30,7 +30,7 @@ class PathOverlay extends CustomPainter {
     
     // 1. Draw Route Shadow
     final shadowPaint = Paint()
-      ..color = Colors.black.withValues(alpha: 0.2)
+      ..color = Colors.black.withOpacity(0.2)
       ..strokeWidth = 10.0 * scale
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round
@@ -182,7 +182,7 @@ class PathOverlay extends CustomPainter {
     canvas.drawCircle(
       currentPosition!, 
       16 * scale, 
-      Paint()..color = Colors.blue.withValues(alpha: 0.2),
+      Paint()..color = Colors.blue.withOpacity(0.2),
     );
     
     // Outer white border
@@ -223,7 +223,7 @@ class PathOverlay extends CustomPainter {
       canvas.drawPath(
         path, 
         Paint()
-          ..color = Colors.blue.shade600.withValues(alpha: 0.8)
+          ..color = Colors.blue.shade600.withOpacity(0.8)
           ..style = PaintingStyle.fill,
       );
     }

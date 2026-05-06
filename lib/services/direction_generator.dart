@@ -1,21 +1,39 @@
 import 'package:hospital_nav/models/navigation_instruction.dart';
 import 'package:hospital_nav/models/node.dart';
 import 'package:hospital_nav/services/path_analyzer.dart';
+import 'package:hospital_nav/services/instruction_formatter.dart';
 
+/// Generates navigation instructions from a computed path + analysis.
+///
+/// Pipeline: Path → PathAnalysis → SemanticIntents → InstructionFormatter → NavigationInstructions
+///
+/// This class produces ONLY semantic intent data (ManeuverType, distance,
+/// landmark keys). All user-facing string generation is delegated to
+/// [InstructionFormatter].
 class DirectionGenerator {
+  final InstructionFormatter _formatter;
+
+  DirectionGenerator(this._formatter);
+
+  /// Generate fully-localized navigation instructions for a route.
   List<NavigationInstruction> generate({
     required List<Node> path,
     required PathAnalysis analysis,
   }) {
-    if (path.isEmpty) {
-      return const [];
-    }
+    if (path.isEmpty) return const [];
 
-    final instructions = <NavigationInstruction>[
-      NavigationInstruction(
+    final intents = _buildSemanticIntents(path, analysis);
+    return _formatter.format(intents);
+  }
+
+  /// Build raw semantic intents from path analysis — NO strings generated here.
+  List<SemanticIntent> _buildSemanticIntents(List<Node> path, PathAnalysis analysis) {
+    final intents = <SemanticIntent>[
+      // Start intent
+      SemanticIntent(
         maneuver: ManeuverType.start,
-        text: 'Start at ${_displayName(path.first)}',
         pathIndex: 0,
+        targetLabelKey: path.first.label,
       ),
     ];
 
@@ -27,73 +45,40 @@ class DirectionGenerator {
       final segment = analysis.segments[i];
       final turn = turnByIndex[segment.endPathIndex];
       final isLastSegment = i == analysis.segments.length - 1;
-      
-      final distStr = segment.distanceMeters.toStringAsFixed(0);
-      
+
       if (turn != null) {
-        String text;
-        if (segment.distanceMeters > 5.0) {
-          text = 'In $distStr meters, ${_turnActionText(turn, path)}';
-        } else {
-          // Capitalize first letter if it's immediate
-          final action = _turnActionText(turn, path);
-          text = '${action[0].toUpperCase()}${action.substring(1)}';
-        }
-        
-        instructions.add(
-          NavigationInstruction(
-            maneuver: _getManeuver(turn.turnType),
-            text: text,
-            distanceMeters: segment.distanceMeters,
-            pathIndex: segment.startPathIndex,
-          ),
-        );
-      } else if (isLastSegment) {
-        if (segment.distanceMeters > 5.0) {
-          instructions.add(
-            NavigationInstruction(
-              maneuver: ManeuverType.arrive,
-              text: 'In $distStr meters, arrive at ${_displayName(path.last)}',
-              distanceMeters: segment.distanceMeters,
-              pathIndex: segment.startPathIndex,
-            ),
-          );
-        }
+        intents.add(SemanticIntent(
+          maneuver: _getManeuver(turn.turnType),
+          distanceMeters: segment.distanceMeters,
+          pathIndex: segment.startPathIndex,
+          landmarkLabelKey: turn.landmark,
+          targetFloor: turn.turnType == TurnType.floorChange
+              ? _getNextFloor(turn.pathIndex, path)
+              : null,
+        ));
+      } else if (isLastSegment && segment.distanceMeters > 5.0) {
+        // Pre-arrival approach
+        intents.add(SemanticIntent(
+          maneuver: ManeuverType.arrive,
+          distanceMeters: segment.distanceMeters,
+          pathIndex: segment.startPathIndex,
+          targetLabelKey: path.last.label,
+        ));
       }
     }
 
-    // Always ensure the final arrival step exists exactly at the end node
-    instructions.add(
-      NavigationInstruction(
-        maneuver: ManeuverType.arrive,
-        text: 'You have arrived at ${_displayName(path.last)}',
-        pathIndex: path.length - 1,
-      ),
-    );
+    // Final arrival
+    intents.add(SemanticIntent(
+      maneuver: ManeuverType.arrive,
+      pathIndex: path.length - 1,
+      targetLabelKey: path.last.label,
+    ));
 
-    return _dedupeInstructions(instructions);
+    return intents;
   }
 
-  String _turnActionText(TurnEvent turn, List<Node> path) {
-    final landmarkSuffix = (turn.landmark != null && turn.landmark!.isNotEmpty)
-        ? ' near ${turn.landmark}'
-        : '';
-
-    switch (turn.turnType) {
-      case TurnType.right:
-        return 'turn right$landmarkSuffix';
-      case TurnType.left:
-        return 'turn left$landmarkSuffix';
-      case TurnType.slightRight:
-        return 'bear right$landmarkSuffix';
-      case TurnType.slightLeft:
-        return 'bear left$landmarkSuffix';
-      case TurnType.floorChange:
-        final nextFloor = (turn.pathIndex + 1 < path.length) ? path[turn.pathIndex + 1].floor : path[turn.pathIndex].floor;
-        return 'go to Floor $nextFloor$landmarkSuffix';
-      case TurnType.straight:
-        return 'continue straight$landmarkSuffix';
-    }
+  int _getNextFloor(int turnIndex, List<Node> path) {
+    return (turnIndex + 1 < path.length) ? path[turnIndex + 1].floor : path[turnIndex].floor;
   }
 
   ManeuverType _getManeuver(TurnType type) {
@@ -105,23 +90,5 @@ class DirectionGenerator {
       case TurnType.floorChange: return ManeuverType.floorChange;
       case TurnType.straight: return ManeuverType.straight;
     }
-  }
-
-  List<NavigationInstruction> _dedupeInstructions(List<NavigationInstruction> instructions) {
-    if (instructions.length < 2) return instructions;
-
-    final result = <NavigationInstruction>[];
-    for (final step in instructions) {
-      if (result.isEmpty || result.last.text != step.text) {
-        result.add(step);
-      }
-    }
-    return result;
-  }
-
-  String _displayName(Node node) {
-    final name = node.name.trim();
-    if (name.isEmpty) return 'your location';
-    return name.replaceAll('_', ' ');
   }
 }

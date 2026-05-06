@@ -8,6 +8,8 @@ import 'package:hospital_nav/models/user_position.dart';
 import 'package:hospital_nav/services/floor_manager.dart';
 import 'package:hospital_nav/services/transition_handler.dart';
 import 'package:hospital_nav/controllers/navigation_controller.dart';
+import 'package:hospital_nav/providers/settings_provider.dart';
+import 'package:hospital_nav/services/path_analyzer.dart';
 
 class NavigationProvider extends ChangeNotifier {
   final FloorManager floorManager = FloorManager();
@@ -67,9 +69,13 @@ class NavigationProvider extends ChangeNotifier {
     for (final step in next.steps) {
       mergedSteps.add(NavigationInstruction(
         maneuver: step.maneuver,
-        text: step.text,
+        semanticType: step.semanticType,
+        localizedInstructions: step.localizedInstructions,
         distanceMeters: step.distanceMeters,
         pathIndex: step.pathIndex + offset,
+        landmarkKey: step.landmarkKey,
+        targetLabelKey: step.targetLabelKey,
+        targetFloor: step.targetFloor,
       ));
     }
     
@@ -78,12 +84,36 @@ class NavigationProvider extends ChangeNotifier {
       ...next.turnPointIndices.map((i) => i + offset),
     ];
     
+    PathAnalysis? mergedAnalysis;
+    if (current.analysis != null && next.analysis != null) {
+      mergedAnalysis = PathAnalysis(
+        segments: [
+          ...current.analysis!.segments,
+          ...next.analysis!.segments.map((s) => PathSegment(
+            startPathIndex: s.startPathIndex + offset,
+            endPathIndex: s.endPathIndex + offset,
+            distanceMeters: s.distanceMeters,
+          )),
+        ],
+        turnEvents: [
+          ...current.analysis!.turnEvents,
+          ...next.analysis!.turnEvents.map((t) => TurnEvent(
+            pathIndex: t.pathIndex + offset,
+            turnType: t.turnType,
+            landmark: t.landmark,
+          )),
+        ],
+        totalDistanceMeters: current.analysis!.totalDistanceMeters + next.analysis!.totalDistanceMeters,
+      );
+    }
+    
     return RouteResult(
       path: mergedPath,
       totalDistance: current.totalDistance + next.totalDistance,
       floorsVisited: mergedFloors,
       steps: mergedSteps,
       turnPointIndices: mergedTurnIndices,
+      analysis: mergedAnalysis,
     );
   }
   
@@ -187,13 +217,16 @@ class NavigationProvider extends ChangeNotifier {
     }
   }
 
-  List<Node> searchRooms(String query) {
+  List<Node> searchRooms(String query, SettingsProvider settingsProvider) {
     if (floorManager.floorGraphs.isEmpty || query.isEmpty) return [];
     final lowerQuery = query.toLowerCase();
     List<Node> results = [];
     for (var g in floorManager.floorGraphs.values) {
         results.addAll(g.nodes.values.where((n) {
-          return n.type == 'room' && n.name.toLowerCase().contains(lowerQuery);
+          if (n.label == null) return false;
+          final transliterated = settingsProvider.transliterateLabel(n.label!).toLowerCase();
+          final fallbackLabel = n.label!.replaceAll('_', ' ').toLowerCase();
+          return transliterated.contains(lowerQuery) || fallbackLabel.contains(lowerQuery);
         }));
     }
     return results;
@@ -299,7 +332,7 @@ class NavigationProvider extends ChangeNotifier {
     }
     
     if (nearest != null) {
-        debugPrint('[REROUTE] User deviated. Recalculating from ${nearest.name}');
+        debugPrint('[REROUTE] User deviated. Recalculating from ${nearest.label ?? nearest.id}');
         _startNode = nearest;
         _calculateRoute();
         notifyListeners();

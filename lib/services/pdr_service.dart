@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:sensors_plus/sensors_plus.dart';
-import 'package:flutter/foundation.dart'; // For debugPrint
+import 'package:flutter/foundation.dart'; // For debugPrint, kIsWeb
 import 'package:hospital_nav/services/sensor_fusion.dart';
-// Removed unused import: package:hospital_nav/models/user_position.dart
 
 class PdrStepEvent {
   final double deltaX;
@@ -36,6 +35,10 @@ class PdrService {
 
   void start() {
     stop(); // Always clean up first
+    if (kIsWeb) {
+      debugPrint('Hardware sensors disabled on Web. Manual navigation not supported.');
+      return;
+    }
     try {
       _accelSub = accelerometerEventStream().listen((event) {
         rawAccelZ = event.z;

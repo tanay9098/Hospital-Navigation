@@ -1,6 +1,6 @@
 class Node {
   final String id;
-  final String name;
+  final String? label;
   final double x;
   final double y;
   final int floor;
@@ -10,7 +10,7 @@ class Node {
 
   Node({
     required this.id,
-    required this.name,
+    this.label,
     required this.x,
     required this.y,
     required this.floor,
@@ -22,7 +22,7 @@ class Node {
   factory Node.fromJson(Map<String, dynamic> json) {
     return Node(
       id: json['id'],
-      name: json['name'] ?? '',
+      label: json['label'],
       x: (json['x'] as num).toDouble(),
       y: (json['y'] as num).toDouble(),
       floor: json['floor'] as int,
@@ -35,7 +35,7 @@ class Node {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
+      if (label != null) 'label': label,
       'x': x,
       'y': y,
       'floor': floor,

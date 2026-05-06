@@ -4,6 +4,7 @@ import 'package:hospital_nav/models/node.dart';
 import 'package:hospital_nav/models/floor_config.dart';
 import 'package:hospital_nav/providers/navigation_provider.dart';
 import 'package:hospital_nav/providers/pdr_provider.dart';
+import 'package:hospital_nav/providers/settings_provider.dart';
 
 class SearchSheet extends StatefulWidget {
   final bool isStart;
@@ -21,6 +22,7 @@ class _SearchSheetState extends State<SearchSheet> {
   @override
   Widget build(BuildContext context) {
     final navProvider = Provider.of<NavigationProvider>(context, listen: false);
+    final settingsProvider = Provider.of<SettingsProvider>(context);
     final theme = Theme.of(context);
 
     return Container(
@@ -53,7 +55,7 @@ class _SearchSheetState extends State<SearchSheet> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.isStart ? 'Choose starting point' : 'Choose destination',
+                      widget.isStart ? settingsProvider.translate('choose_starting_point') : settingsProvider.translate('choose_destination'),
                       style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     IconButton(
@@ -71,7 +73,7 @@ class _SearchSheetState extends State<SearchSheet> {
                   controller: _controller,
                   autofocus: true,
                   decoration: InputDecoration(
-                    hintText: 'Search rooms or departments...',
+                    hintText: settingsProvider.translate('search_rooms'),
                     prefixIcon: const Icon(Icons.search, color: Colors.grey),
                     suffixIcon: _controller.text.isNotEmpty
                         ? IconButton(
@@ -96,7 +98,7 @@ class _SearchSheetState extends State<SearchSheet> {
                   onChanged: (value) {
                     setState(() {
                       _isSearching = value.isNotEmpty;
-                      _results = navProvider.searchRooms(value);
+                      _results = navProvider.searchRooms(value, settingsProvider);
                     });
                   },
                 ),
@@ -109,8 +111,8 @@ class _SearchSheetState extends State<SearchSheet> {
           // Results Area
           Expanded(
             child: _isSearching
-                ? _buildSearchResults(theme, navProvider)
-                : _buildFloorBrowseList(theme, navProvider),
+                ? _buildSearchResults(theme, navProvider, settingsProvider)
+                : _buildFloorBrowseList(theme, navProvider, settingsProvider),
           ),
         ],
       ),
@@ -118,7 +120,7 @@ class _SearchSheetState extends State<SearchSheet> {
   }
 
   /// Shows search results when user is typing
-  Widget _buildSearchResults(ThemeData theme, NavigationProvider navProvider) {
+  Widget _buildSearchResults(ThemeData theme, NavigationProvider navProvider, SettingsProvider settingsProvider) {
     if (_results.isEmpty) {
       return Center(
         child: Column(
@@ -126,7 +128,7 @@ class _SearchSheetState extends State<SearchSheet> {
           children: [
             Icon(Icons.search_off, size: 48, color: Colors.grey.shade400),
             const SizedBox(height: 16),
-            Text('No locations found', style: TextStyle(color: Colors.grey.shade600, fontSize: 16)),
+            Text(settingsProvider.translate('no_locations_found'), style: TextStyle(color: Colors.grey.shade600, fontSize: 16)),
           ],
         ),
       );
@@ -135,19 +137,19 @@ class _SearchSheetState extends State<SearchSheet> {
     return ListView.builder(
       padding: const EdgeInsets.symmetric(vertical: 8),
       itemCount: _results.length,
-      itemBuilder: (context, index) => _buildRoomTile(_results[index], theme),
+      itemBuilder: (context, index) => _buildRoomTile(_results[index], theme, settingsProvider),
     );
   }
 
   /// Shows all rooms grouped by floor when search is empty
-  Widget _buildFloorBrowseList(ThemeData theme, NavigationProvider navProvider) {
+  Widget _buildFloorBrowseList(ThemeData theme, NavigationProvider navProvider, SettingsProvider settingsProvider) {
     // Collect all rooms from all floors
     final Map<int, List<Node>> roomsByFloor = {};
     for (var entry in navProvider.floorManager.floorGraphs.entries) {
       final rooms = entry.value.nodes.values
-          .where((n) => n.type == 'room' && n.name.trim().isNotEmpty)
+          .where((n) => n.label != null && n.label!.isNotEmpty)
           .toList()
-        ..sort((a, b) => a.name.compareTo(b.name));
+        ..sort((a, b) => (a.label ?? '').compareTo(b.label ?? ''));
       if (rooms.isNotEmpty) {
         roomsByFloor[entry.key] = rooms;
       }
@@ -157,7 +159,7 @@ class _SearchSheetState extends State<SearchSheet> {
 
     if (sortedFloors.isEmpty) {
       return Center(
-        child: Text('No rooms available', style: TextStyle(color: Colors.grey.shade600)),
+        child: Text(settingsProvider.translate('no_rooms_available'), style: TextStyle(color: Colors.grey.shade600)),
       );
     }
 
@@ -190,7 +192,7 @@ class _SearchSheetState extends State<SearchSheet> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    '${roomsByFloor[floor]!.length} places',
+                    '${roomsByFloor[floor]!.length} ${settingsProvider.translate('places')}',
                     style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
                   ),
                 ],
@@ -201,7 +203,7 @@ class _SearchSheetState extends State<SearchSheet> {
 
           final rooms = roomsByFloor[floor]!;
           if (index < currentIndex + rooms.length) {
-            return _buildRoomTile(rooms[index - currentIndex], theme);
+            return _buildRoomTile(rooms[index - currentIndex], theme, settingsProvider);
           }
           currentIndex += rooms.length;
         }
@@ -211,22 +213,23 @@ class _SearchSheetState extends State<SearchSheet> {
   }
 
   /// Builds a single room tile (reused by both search results and browse list)
-  Widget _buildRoomTile(Node node, ThemeData theme) {
+  Widget _buildRoomTile(Node node, ThemeData theme, SettingsProvider settingsProvider) {
     final floorName = kFloorConfigs[node.floor]?.floorName ?? 'Floor ${node.floor}';
+    final translatedName = settingsProvider.transliterateLabel(node.label ?? node.id);
 
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       leading: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: theme.colorScheme.primary.withValues(alpha: 0.1),
+          color: theme.colorScheme.primary.withOpacity(0.1),
           shape: BoxShape.circle,
         ),
-        child: Icon(_getIconForRoom(node.name), color: theme.colorScheme.primary, size: 20),
+        child: Icon(_getIconForRoom(node.label ?? ''), color: theme.colorScheme.primary, size: 20),
       ),
-      title: Text(node.name, style: const TextStyle(fontWeight: FontWeight.w600)),
+      title: Text(translatedName, style: const TextStyle(fontWeight: FontWeight.w600)),
       subtitle: Text(
-        '$floorName • ${node.accessible ? "Accessible" : "Stairs Only"}',
+        '$floorName • ${node.accessible ? settingsProvider.translate('accessible') : settingsProvider.translate('stairs_only')}',
         style: TextStyle(color: Colors.grey.shade600),
       ),
       onTap: () => _onRoomSelected(node),
@@ -245,6 +248,8 @@ class _SearchSheetState extends State<SearchSheet> {
     if (lower.contains('ot') || lower.contains('operation') || lower.contains('surgery')) return Icons.medical_services;
     if (lower.contains('radiology') || lower.contains('x-ray') || lower.contains('scan')) return Icons.biotech;
     if (lower.contains('entrance') || lower.contains('exit') || lower.contains('gate')) return Icons.door_front_door;
+    if (lower.contains('toilet_female')) return Icons.female;
+    if (lower.contains('toilet_male')) return Icons.male;
     if (lower.contains('restroom') || lower.contains('toilet') || lower.contains('washroom')) return Icons.wc;
     if (lower.contains('office') || lower.contains('admin')) return Icons.business;
     if (lower.contains('blood')) return Icons.bloodtype;

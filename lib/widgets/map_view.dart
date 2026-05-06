@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:hospital_nav/providers/navigation_provider.dart';
 import 'package:hospital_nav/providers/simulation_provider.dart';
 import 'package:hospital_nav/providers/pdr_provider.dart';
+import 'package:hospital_nav/providers/settings_provider.dart';
 import 'package:hospital_nav/models/floor_config.dart';
 import 'package:hospital_nav/widgets/path_overlay.dart';
 
@@ -132,8 +133,8 @@ class FloorMapViewState extends State<FloorMapView> {
                 height: currentMapHeight,
                 child: Stack(
                   children: [
-                    // Cache the SVG map in its own RepaintBoundary
-                    RepaintBoundary(
+                    ColoredBox(
+                      color: Colors.white,
                       child: SvgPicture.asset(
                         mapAsset,
                         width: currentMapWidth,
@@ -219,11 +220,51 @@ class POIOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: POIPainter(
-        nodes: nodes,
-        scale: mapDrawScale,
-      ),
+    return Consumer<SettingsProvider>(
+      builder: (context, settingsProvider, child) {
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned.fill(
+              child: CustomPaint(
+                painter: POIPainter(
+                  nodes: nodes,
+                  scale: mapDrawScale,
+                ),
+              ),
+            ),
+            // Only render labels for nodes that have a label (rooms, lifts, stairs, ramps)
+            ...nodes.where((n) => n.label != null && n.label.toString().isNotEmpty).map((node) {
+              final translatedName = settingsProvider.transliterateLabel(node.label.toString());
+              
+              return Positioned(
+                left: (node.x * mapDrawScale) - 50,
+                top: (node.y * mapDrawScale) + 14, // below the icon
+                width: 100, // Fixed width for centering
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      translatedName,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                        height: 1.1,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ],
+        );
+      },
     );
   }
 }
@@ -236,33 +277,43 @@ class POIPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    for (var node in nodes) {
-      IconData? icon;
-      Color color = Colors.grey.shade600;
+    try {
+      for (var node in nodes) {
+        IconData? icon;
+        Color color = Colors.grey.shade600;
 
-      final type = node.type.toString().toLowerCase();
-      final name = node.name.toString().toUpperCase();
+        final type = node.type.toString().toLowerCase();
+        final label = (node.label ?? '').toString().toLowerCase();
 
-      if (type == 'lift') {
-        icon = Icons.elevator;
-        color = Colors.blue.shade600;
-      } else if (type == 'stairs') {
-        icon = Icons.stairs;
-        color = Colors.orange.shade600;
-      } else if (type == 'ramp') {
-        icon = Icons.accessible;
-        color = Colors.green.shade600;
-      } else if (name.contains('TOILET') || name.contains('RESTROOM')) {
-        icon = Icons.wc;
-        color = Colors.purple.shade600;
-      } else if (name.contains('ENTRANCE') || name.contains('EXIT')) {
-        icon = Icons.door_front_door;
-        color = Colors.brown.shade600;
+        if (type == 'lift') {
+          icon = Icons.elevator;
+          color = Colors.blue.shade600;
+        } else if (type == 'stairs') {
+          icon = Icons.stairs;
+          color = Colors.orange.shade600;
+        } else if (type == 'ramp') {
+          icon = Icons.accessible;
+          color = Colors.green.shade600;
+        } else if (label.contains('toilet_female')) {
+          icon = Icons.female;
+          color = Colors.purple.shade600;
+        } else if (label.contains('toilet_male')) {
+          icon = Icons.male;
+          color = Colors.blue.shade600;
+        } else if (label.contains('toilet') || label.contains('restroom')) {
+          icon = Icons.wc;
+          color = Colors.purple.shade600;
+        } else if (label.contains('entrance') || label.contains('exit')) {
+          icon = Icons.door_front_door;
+          color = Colors.brown.shade600;
+        }
+
+        if (icon != null) {
+          _drawIcon(canvas, Offset(node.x * scale, node.y * scale), icon, color);
+        }
       }
-
-      if (icon != null) {
-        _drawIcon(canvas, Offset(node.x * scale, node.y * scale), icon, color);
-      }
+    } catch (e) {
+      debugPrint('Error in POIPainter: $e');
     }
   }
 
@@ -270,12 +321,12 @@ class POIPainter extends CustomPainter {
     const double iconSize = 24.0;
     
     // Draw background circle for better visibility
-    final bgPaint = Paint()..color = Colors.white.withValues(alpha: 0.9);
+    final bgPaint = Paint()..color = Colors.white.withOpacity(0.9);
     canvas.drawCircle(pos, iconSize * 0.7, bgPaint);
     
     // Draw border
     final borderPaint = Paint()
-      ..color = color.withValues(alpha: 0.3)
+      ..color = color.withOpacity(0.3)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
     canvas.drawCircle(pos, iconSize * 0.7, borderPaint);

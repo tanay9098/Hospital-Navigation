@@ -1,5 +1,6 @@
 import 'package:hospital_nav/models/node.dart';
 import 'package:hospital_nav/models/navigation_instruction.dart';
+import 'package:hospital_nav/services/path_analyzer.dart';
 
 class RouteResult {
   final List<Node> path;
@@ -7,6 +8,7 @@ class RouteResult {
   final Set<int> floorsVisited;
   final List<NavigationInstruction> steps;
   final List<int> turnPointIndices;
+  final PathAnalysis? analysis;
 
   RouteResult({
     required this.path,
@@ -14,5 +16,6 @@ class RouteResult {
     required this.floorsVisited,
     required this.steps,
     this.turnPointIndices = const [],
+    this.analysis,
   });
 }

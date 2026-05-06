@@ -3,16 +3,14 @@ import 'package:collection/collection.dart';
 import 'package:hospital_nav/models/nav_graph.dart';
 import 'package:hospital_nav/models/node.dart';
 import 'package:hospital_nav/models/route_result.dart';
-import 'package:hospital_nav/services/direction_generator.dart';
 import 'package:hospital_nav/services/path_analyzer.dart';
 
 class PathfindingService {
   static const double floorPenalty = 500.0;
   static const double _epsilon = 1e-9;
   final PathAnalyzer _pathAnalyzer = PathAnalyzer();
-  final DirectionGenerator _directionGenerator = DirectionGenerator();
 
-  RouteResult? findPath(NavGraph graph, String startId, String endId, {String transitPreference = 'lift'}) {
+  RouteResult? findPath(NavGraph graph, String startId, String endId) {
     if (!graph.nodes.containsKey(startId) || !graph.nodes.containsKey(endId)) return null;
 
     final double ppm = graph.pixelsPerMeter;
@@ -56,11 +54,6 @@ class PathfindingService {
 
       for (var edge in neighbors) {
         final neighborNode = graph.nodes[edge.toNode]!;
-        
-        // Enforce transit preference
-        if (neighborNode.type == 'stairs' || neighborNode.type == 'lift' || neighborNode.type == 'ramp') {
-             if (neighborNode.type != transitPreference) continue;
-        }
 
         final currentGScore = gScore[current.id];
         if (currentGScore == null) continue;
@@ -120,8 +113,9 @@ class PathfindingService {
       path: path,
       totalDistance: analysis.totalDistanceMeters,
       floorsVisited: floors,
-      steps: _directionGenerator.generate(path: path, analysis: analysis),
+      steps: const [], // Directions generated later via DirectionGenerator + SettingsProvider
       turnPointIndices: analysis.turnEvents.map((e) => e.pathIndex).toList(),
+      analysis: analysis,
     );
   }
 

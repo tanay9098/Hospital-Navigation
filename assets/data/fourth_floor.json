@@ -1,0 +1,635 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "description": "Multi-floor navigation graph. Generated via NavGraph Studio Pro.",
+    "building": "PESU HOSPITAL",
+    "pixelsPerMeter": 7.64,
+    "floorPenalty": 500
+  },
+  "floors": [
+    {
+      "id": 4,
+      "name": "Floor 4",
+      "label": "4"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "F4_N1",
+      "type": "room",
+      "x": 535,
+      "y": 325,
+      "floor": 4,
+      "zone": "",
+      "accessible": true,
+      "label": "post_natal_ward"
+    },
+    {
+      "id": "F4_N2",
+      "type": "room",
+      "x": 162,
+      "y": 484,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true,
+      "label": "paediatric_ward"
+    },
+    {
+      "id": "F4_N3",
+      "type": "room",
+      "x": 926,
+      "y": 492,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true,
+      "label": "paediatric_ward"
+    },
+    {
+      "id": "F4_N4",
+      "type": "room",
+      "x": 456,
+      "y": 637,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true,
+      "label": "toilet_female"
+    },
+    {
+      "id": "F4_N5",
+      "type": "room",
+      "x": 599,
+      "y": 637,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true,
+      "label": "toilet_male"
+    },
+    {
+      "id": "F4_N6",
+      "type": "room",
+      "x": 177,
+      "y": 1033,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true,
+      "label": "department_of_obg"
+    },
+    {
+      "id": "F4_N7",
+      "type": "room",
+      "x": 911,
+      "y": 1040,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true,
+      "label": "gynaecology_ward"
+    },
+    {
+      "id": "F4_N8",
+      "type": "room",
+      "x": 531,
+      "y": 1177,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true,
+      "label": "antenatal_ward"
+    },
+    {
+      "id": "F4_N9",
+      "type": "junction",
+      "x": 530,
+      "y": 397,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N10",
+      "type": "junction",
+      "x": 530,
+      "y": 489,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N11",
+      "type": "junction",
+      "x": 382,
+      "y": 489,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N12",
+      "type": "junction",
+      "x": 237,
+      "y": 492,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N13",
+      "type": "junction",
+      "x": 695,
+      "y": 489,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N14",
+      "type": "junction",
+      "x": 840,
+      "y": 489,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N15",
+      "type": "junction",
+      "x": 532,
+      "y": 637,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N16",
+      "type": "junction",
+      "x": 532,
+      "y": 723,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N17",
+      "type": "lift",
+      "x": 451,
+      "y": 723,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true,
+      "vertical": true,
+      "vertical_id": "V_LIFT_2",
+      "label": "lift_2"
+    },
+    {
+      "id": "F4_N18",
+      "type": "lift",
+      "x": 620,
+      "y": 723,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true,
+      "vertical": true,
+      "vertical_id": "V_LIFT_3",
+      "label": "lift_3"
+    },
+    {
+      "id": "F4_N19",
+      "type": "junction",
+      "x": 620,
+      "y": 799,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N20",
+      "type": "junction",
+      "x": 532,
+      "y": 800,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N21",
+      "type": "junction",
+      "x": 451,
+      "y": 799,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N22",
+      "type": "ramp",
+      "x": 451,
+      "y": 863,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true,
+      "vertical": true,
+      "vertical_id": "V_RAMP_1",
+      "label": "ramp"
+    },
+    {
+      "id": "F4_N23",
+      "type": "stairs",
+      "x": 620,
+      "y": 865,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true,
+      "vertical": true,
+      "vertical_id": "V_STAIRS_2",
+      "label": "stairs_2"
+    },
+    {
+      "id": "F4_N24",
+      "type": "junction",
+      "x": 532,
+      "y": 858,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N25",
+      "type": "junction",
+      "x": 532,
+      "y": 965,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N26",
+      "type": "junction",
+      "x": 532,
+      "y": 1041,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N27",
+      "type": "junction",
+      "x": 660,
+      "y": 1041,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N28",
+      "type": "junction",
+      "x": 774,
+      "y": 1041,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N29",
+      "type": "junction",
+      "x": 843,
+      "y": 1043,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N30",
+      "type": "junction",
+      "x": 400,
+      "y": 1041,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N31",
+      "type": "junction",
+      "x": 290,
+      "y": 1040,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N32",
+      "type": "junction",
+      "x": 233,
+      "y": 1033,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N33",
+      "type": "junction",
+      "x": 532,
+      "y": 1112,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N34",
+      "type": "junction",
+      "x": 451,
+      "y": 761,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    },
+    {
+      "id": "F4_N35",
+      "type": "junction",
+      "x": 620,
+      "y": 763,
+      "floor": 4,
+      "zone": "general",
+      "accessible": true
+    }
+  ],
+  "edges": [
+    {
+      "id": "E1",
+      "from": "F4_N2",
+      "to": "F4_N12",
+      "distance": 9.9,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E2",
+      "from": "F4_N12",
+      "to": "F4_N11",
+      "distance": 19,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E3",
+      "from": "F4_N11",
+      "to": "F4_N10",
+      "distance": 19.4,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E4",
+      "from": "F4_N10",
+      "to": "F4_N13",
+      "distance": 21.6,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E5",
+      "from": "F4_N13",
+      "to": "F4_N14",
+      "distance": 19,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E6",
+      "from": "F4_N14",
+      "to": "F4_N3",
+      "distance": 11.3,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E7",
+      "from": "F4_N1",
+      "to": "F4_N9",
+      "distance": 9.5,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E8",
+      "from": "F4_N9",
+      "to": "F4_N10",
+      "distance": 12,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E9",
+      "from": "F4_N10",
+      "to": "F4_N15",
+      "distance": 19.4,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E10",
+      "from": "F4_N15",
+      "to": "F4_N16",
+      "distance": 11.3,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E11",
+      "from": "F4_N15",
+      "to": "F4_N4",
+      "distance": 10,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E12",
+      "from": "F4_N15",
+      "to": "F4_N5",
+      "distance": 8.8,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E13",
+      "from": "F4_N16",
+      "to": "F4_N17",
+      "distance": 10.6,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E14",
+      "from": "F4_N16",
+      "to": "F4_N18",
+      "distance": 11.5,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E15",
+      "from": "F4_N17",
+      "to": "F4_N34",
+      "distance": 5,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E16",
+      "from": "F4_N34",
+      "to": "F4_N21",
+      "distance": 5,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E17",
+      "from": "F4_N21",
+      "to": "F4_N20",
+      "distance": 10.6,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E18",
+      "from": "F4_N20",
+      "to": "F4_N19",
+      "distance": 11.5,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E19",
+      "from": "F4_N19",
+      "to": "F4_N35",
+      "distance": 4.7,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E20",
+      "from": "F4_N35",
+      "to": "F4_N18",
+      "distance": 5.2,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E21",
+      "from": "F4_N20",
+      "to": "F4_N24",
+      "distance": 7.6,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E22",
+      "from": "F4_N24",
+      "to": "F4_N22",
+      "distance": 10.6,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E23",
+      "from": "F4_N24",
+      "to": "F4_N23",
+      "distance": 11.6,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E24",
+      "from": "F4_N24",
+      "to": "F4_N25",
+      "distance": 14,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E25",
+      "from": "F4_N25",
+      "to": "F4_N26",
+      "distance": 10,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E26",
+      "from": "F4_N26",
+      "to": "F4_N27",
+      "distance": 16.8,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E27",
+      "from": "F4_N27",
+      "to": "F4_N28",
+      "distance": 14.9,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E28",
+      "from": "F4_N28",
+      "to": "F4_N29",
+      "distance": 9,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E29",
+      "from": "F4_N29",
+      "to": "F4_N7",
+      "distance": 8.9,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E30",
+      "from": "F4_N26",
+      "to": "F4_N30",
+      "distance": 17.3,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E31",
+      "from": "F4_N30",
+      "to": "F4_N31",
+      "distance": 14.4,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E32",
+      "from": "F4_N31",
+      "to": "F4_N32",
+      "distance": 7.5,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E33",
+      "from": "F4_N32",
+      "to": "F4_N6",
+      "distance": 7.3,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E34",
+      "from": "F4_N26",
+      "to": "F4_N33",
+      "distance": 9.3,
+      "type": "corridor",
+      "bidirectional": true
+    },
+    {
+      "id": "E35",
+      "from": "F4_N33",
+      "to": "F4_N8",
+      "distance": 8.5,
+      "type": "corridor",
+      "bidirectional": true
+    }
+  ]
+}

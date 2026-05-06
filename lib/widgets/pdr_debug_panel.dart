@@ -27,11 +27,11 @@ class _PdrDebugPanelState extends State<PdrDebugPanel> {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: Colors.grey.shade900.withValues(alpha: 0.85),
+                color: Colors.grey.shade900.withOpacity(0.85),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.25),
+                    color: Colors.black.withOpacity(0.25),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                   ),
@@ -68,11 +68,11 @@ class _PdrDebugPanelState extends State<PdrDebugPanel> {
           width: 220,
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.grey.shade900.withValues(alpha: 0.92),
+            color: Colors.grey.shade900.withOpacity(0.92),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.3),
+                color: Colors.black.withOpacity(0.3),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -143,7 +143,7 @@ class _PdrDebugPanelState extends State<PdrDebugPanel> {
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
                       '✓ User origin set',
-                      style: TextStyle(color: Colors.greenAccent.withValues(alpha: 0.7), fontSize: 10),
+                      style: TextStyle(color: Colors.greenAccent.withOpacity(0.7), fontSize: 10),
                     ),
                   ),
               ],
