@@ -24,7 +24,7 @@ The system exposes REST APIs that allow patients and visitors to navigate the ho
 # Project Structure
 
 ```
-pes-hospital-nav
+backend
 │
 ├── src
 │   ├── config          # Environment configuration
@@ -111,7 +111,7 @@ Clone the repository:
 
 ```
 git clone <repository-url>
-cd pes-hospital-nav
+cd backend
 ```
 
 Install dependencies:

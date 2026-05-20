@@ -1,25 +1,28 @@
--- Domain 4: IVRS
+-- IVRS domain
+-- Tracks inbound calls coming from Exotel and the interactions inside each call.
 
 -- =========================
 -- IVRS_CALL
 -- =========================
 CREATE TABLE IF NOT EXISTS IVRS_CALL (
     id TEXT PRIMARY KEY,
-    session_id TEXT,
+    exotel_call_sid TEXT UNIQUE,
     caller_number TEXT,
+    called_number TEXT,
     language_code TEXT,
+    selected_dept_id TEXT,
     call_start TEXT DEFAULT CURRENT_TIMESTAMP,
     call_end TEXT,
-
     call_status TEXT CHECK(call_status IN (
         'ACTIVE',
         'COMPLETED',
-        'DROPPED'
+        'DROPPED',
+        'NO_INPUT',
+        'ERROR'
     )),
+    menu_version INTEGER DEFAULT 1,
 
-    menu_version INTEGER,
-
-    FOREIGN KEY (session_id) REFERENCES NAV_SESSION(id)
+    FOREIGN KEY (selected_dept_id) REFERENCES DEPARTMENT(id)
 );
 
 -- =========================
@@ -27,29 +30,33 @@ CREATE TABLE IF NOT EXISTS IVRS_CALL (
 -- =========================
 CREATE TABLE IF NOT EXISTS IVRS_INTERACTION (
     id TEXT PRIMARY KEY,
-    call_id TEXT,
-    sequence INTEGER,
+    call_id TEXT NOT NULL,
+    sequence INTEGER NOT NULL,
+    step TEXT CHECK(step IN (
+        'START',
+        'LANGUAGE',
+        'DEPARTMENT',
+        'DIRECTIONS',
+        'REPEAT',
+        'END'
+    )),
     prompt_played TEXT,
     dtmf_input TEXT,
-    speech_input TEXT,
-
     intent_matched TEXT CHECK(intent_matched IN (
         'DEPARTMENT_SELECT',
+        'LANGUAGE_SELECT',
         'REPEAT_INSTRUCTION',
-        'GO_BACK',
         'MAIN_MENU',
+        'HANGUP',
         'UNKNOWN'
     )),
-
-    confidence_score REAL,
     recorded_at TEXT DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (call_id) REFERENCES IVRS_CALL(id)
 );
 
--- Indexes
-CREATE INDEX IF NOT EXISTS idx_ivrs_call_session
-ON IVRS_CALL(session_id);
+CREATE INDEX IF NOT EXISTS idx_ivrs_call_exotel_sid
+ON IVRS_CALL(exotel_call_sid);
 
 CREATE INDEX IF NOT EXISTS idx_ivrs_interaction_call
 ON IVRS_INTERACTION(call_id);

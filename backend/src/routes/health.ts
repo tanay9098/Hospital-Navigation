@@ -5,7 +5,7 @@ const router = Router();
 router.get('/', (_req: Request, res: Response): void => {
   res.status(200).json({
     success: true,
-    message: 'PES Hospital Nav API is running',
+    message: 'PES Hospital IVRS API is running',
     timestamp: new Date().toISOString(),
   });
 });
