@@ -1,0 +1,102 @@
+{
+  "app_title": "अस्पताल नेविगेशन",
+  "select_language": "भाषा चुनें",
+  "continue_btn": "जारी रखें",
+  "search_starting_point": "शुरुआती बिंदु चुनें...",
+  "search_destination": "गंतव्य खोजें...",
+  "start_navigation": "नेविगेशन शुरू करें",
+  "directions": "दिशा-निर्देश",
+  "settings": "सेटिंग्स",
+  "enable_voice": "ध्वनि निर्देश सक्षम करें",
+  "voice_language": "ध्वनि भाषा",
+  "display_language": "प्रदर्शन भाषा",
+  "floor": "मंज़िल",
+  "choose_starting_point": "शुरुआती बिंदु चुनें",
+  "choose_destination": "गंतव्य चुनें",
+  "search_rooms": "कमरे या विभाग खोजें...",
+  "no_locations_found": "कोई स्थान नहीं मिला",
+  "no_rooms_available": "कोई कमरा उपलब्ध नहीं",
+  "places": "स्थान",
+  "accessible": "पहुँच योग्य",
+  "stairs_only": "केवल सीढ़ियाँ",
+  "mode": "मोड",
+  "simulate": "पूर्वावलोकन",
+  "manual": "लाइव",
+  "start": "शुरू करें",
+  "stop": "रोकें",
+  "lift": "लिफ्ट",
+  "ramp": "रैंप",
+  "preference_label": "प्राथमिकता",
+  "swap_start_destination": "शुरुआत और गंतव्य बदलें",
+  "stop_navigation": "नेविगेशन रोकें",
+  "pause_simulation": "सिमुलेशन रोकें",
+  "resume_simulation": "सिमुलेशन फिर शुरू करें",
+  "unit_km": "कि.मी.",
+  "unit_m": "मी.",
+  "min_walk_singular": "1 मिनट चलना",
+  "min_walk_plural": "{minutes} मिनट चलना",
+  "via_prefix": "मार्ग",
+  "floor_short_prefix": "F",
+  "manual_nav_started": "मैनुअल नेविगेशन शुरू हो गया। कृपया चलना शुरू करें।",
+
+  "nav": {
+    "start_at": [
+      "{location} से शुरू करें",
+      "{location} से चलना शुरू करें",
+      "आपकी यात्रा {location} से शुरू होती है"
+    ],
+    "in_meters_action": [
+      "{dist} मीटर में, {action}",
+      "{dist} मीटर बाद, {action}",
+      "{dist} मीटर आगे, {action}"
+    ],
+    "next_action": [
+      "अगले मोड़ पर {action}",
+      "आगे आते ही {action}"
+    ],
+    "keep_going_then_action": [
+      "सीधे चलते रहें, फिर {action}",
+      "आगे बढ़ें और फिर {action}"
+    ],
+    "arrive_at_dist": [
+      "{dist} मीटर में, {location} पर पहुँचें",
+      "और {dist} मीटर — {location} सामने है",
+      "{location} {dist} मीटर दूर है"
+    ],
+    "arrived_at": [
+      "आप {location} पर पहुँच गए हैं",
+      "{location} पर आपका स्वागत है",
+      "मंज़िल पर पहुँच गए: {location}"
+    ],
+    "arrived_at_short": "पहुँच गए",
+    "turn_left": [
+      "बाएँ मुड़ें",
+      "बाईं तरफ जाएँ",
+      "लेफ्ट लें"
+    ],
+    "turn_right": [
+      "दाएँ मुड़ें",
+      "दाईं तरफ जाएँ",
+      "राइट लें"
+    ],
+    "bear_left": [
+      "थोड़ा बाएँ मुड़ें",
+      "हल्का बाएँ जाएँ"
+    ],
+    "bear_right": [
+      "थोड़ा दाएँ मुड़ें",
+      "हल्का दाएँ जाएँ"
+    ],
+    "continue_straight": [
+      "सीधे चलते रहें",
+      "सीधे जाएँ",
+      "आगे बढ़ते रहें"
+    ],
+    "go_to_floor": [
+      "मंज़िल {floor} पर जाएँ",
+      "मंज़िल {floor} की तरफ चलें"
+    ],
+    "near_landmark": " {landmark} के पास",
+    "your_location": "आपका स्थान"
+  }
+}

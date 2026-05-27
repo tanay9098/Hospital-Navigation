@@ -1,0 +1,94 @@
+{
+  "app_title": "ఆసుపత్రి నావిగేషన్",
+  "select_language": "భాషను ఎంచుకోండి",
+  "continue_btn": "కొనసాగించు",
+  "search_starting_point": "ప్రారంభ స్థానాన్ని ఎంచుకోండి...",
+  "search_destination": "గమ్యస్థానాన్ని వెతకండి...",
+  "start_navigation": "నావిగేషన్ ప్రారంభించు",
+  "directions": "దిశలు",
+  "settings": "సెట్టింగ్‌లు",
+  "enable_voice": "వాయిస్ సూచనలను ప్రారంభించు",
+  "voice_language": "వాయిస్ భాష",
+  "display_language": "ప్రదర్శన భాష",
+  "floor": "అంతస్తు",
+  "choose_starting_point": "ప్రారంభ స్థానాన్ని ఎంచుకోండి",
+  "choose_destination": "గమ్యస్థానాన్ని ఎంచుకోండి",
+  "search_rooms": "గదులు లేదా విభాగాలను వెతకండి...",
+  "no_locations_found": "స్థానాలు కనుగొనబడలేదు",
+  "no_rooms_available": "గదులు అందుబాటులో లేవు",
+  "places": "స్థానాలు",
+  "accessible": "ప్రాప్యమైన",
+  "stairs_only": "మెట్లు మాత్రమే",
+  "mode": "మోడ్",
+  "simulate": "ప్రివ్యూ",
+  "manual": "లైవ్",
+  "start": "ప్రారంభించు",
+  "stop": "ఆపు",
+  "lift": "లిఫ్ట్",
+  "ramp": "ర్యాంప్",
+  "preference_label": "ప్రాధాన్యత",
+  "swap_start_destination": "ప్రారంభం మరియు గమ్యాన్ని మార్చండి",
+  "stop_navigation": "నావిగేషన్ ఆపు",
+  "pause_simulation": "సిమ్యులేషన్ నిలిపివేయి",
+  "resume_simulation": "సిమ్యులేషన్ కొనసాగించు",
+  "unit_km": "కి.మీ",
+  "unit_m": "మీ",
+  "min_walk_singular": "1 నిమిషం నడక",
+  "min_walk_plural": "{minutes} నిమిషాల నడక",
+  "via_prefix": "మార్గం",
+  "floor_short_prefix": "F",
+  "manual_nav_started": "మాన్యువల్ నావిగేషన్ ప్రారంభమైంది. నడవడం ప్రారంభించండి.",
+
+  "nav": {
+    "start_at": [
+      "{location} వద్ద ప్రారంభించండి",
+      "{location} నుండి బయలుదేరండి"
+    ],
+    "in_meters_action": [
+      "{dist} మీటర్లలో, {action}",
+      "{dist} మీటర్ల తర్వాత, {action}"
+    ],
+    "next_action": [
+      "తర్వాతి మలుపులో {action}",
+      "కొద్దిసేపట్లో {action}"
+    ],
+    "keep_going_then_action": [
+      "ముందుకు వెళ్లి, తరువాత {action}",
+      "కొనసాగించి తరువాత {action}"
+    ],
+    "arrive_at_dist": [
+      "{dist} మీటర్లలో, {location} చేరుకోండి",
+      "{location} {dist} మీటర్ల దూరంలో ఉంది"
+    ],
+    "arrived_at": [
+      "మీరు {location} చేరుకున్నారు",
+      "{location} కి స్వాగతం"
+    ],
+    "arrived_at_short": "చేరుకున్నారు",
+    "turn_left": [
+      "ఎడమవైపు తిరగండి",
+      "ఎడమవైపు వెళ్ళండి"
+    ],
+    "turn_right": [
+      "కుడివైపు తిరగండి",
+      "కుడివైపు వెళ్ళండి"
+    ],
+    "bear_left": [
+      "కొద్దిగా ఎడమవైపు తిరగండి",
+      "తేలికగా ఎడమవైపు"
+    ],
+    "bear_right": [
+      "కొద్దిగా కుడివైపు తిరగండి",
+      "తేలికగా కుడివైపు"
+    ],
+    "continue_straight": [
+      "నేరుగా కొనసాగించండి",
+      "నేరుగా వెళ్ళండి"
+    ],
+    "go_to_floor": [
+      "అంతస్తు {floor} కి వెళ్ళండి"
+    ],
+    "near_landmark": " {landmark} సమీపంలో",
+    "your_location": "మీ స్థానం"
+  }
+}

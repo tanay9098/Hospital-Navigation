@@ -1,0 +1,94 @@
+{
+  "app_title": "மருத்துவமனை வழிகாட்டி",
+  "select_language": "மொழியைத் தேர்ந்தெடுக்கவும்",
+  "continue_btn": "தொடரவும்",
+  "search_starting_point": "தொடக்க இடத்தைத் தேர்ந்தெடுக்கவும்...",
+  "search_destination": "இலக்கைத் தேடுங்கள்...",
+  "start_navigation": "வழிகாட்டலைத் தொடங்கு",
+  "directions": "திசைகள்",
+  "settings": "அமைப்புகள்",
+  "enable_voice": "குரல் வழிகாட்டலை இயக்கு",
+  "voice_language": "குரல் மொழி",
+  "display_language": "காட்சி மொழி",
+  "floor": "தளம்",
+  "choose_starting_point": "தொடக்க புள்ளியைத் தேர்ந்தெடுக்கவும்",
+  "choose_destination": "இலக்கைத் தேர்ந்தெடுக்கவும்",
+  "search_rooms": "அறைகள் அல்லது துறைகளைத் தேடுங்கள்...",
+  "no_locations_found": "இடங்கள் எதுவும் கிடைக்கவில்லை",
+  "no_rooms_available": "அறைகள் எதுவும் கிடைக்கவில்லை",
+  "places": "இடங்கள்",
+  "accessible": "அணுகக்கூடியது",
+  "stairs_only": "படிகள் மட்டும்",
+  "mode": "முறை",
+  "simulate": "முன்னோட்டம்",
+  "manual": "நேரடி",
+  "start": "தொடங்கு",
+  "stop": "நிறுத்து",
+  "lift": "லிப்ட்",
+  "ramp": "ரேம்ப்",
+  "preference_label": "விருப்பம்",
+  "swap_start_destination": "தொடக்கம் மற்றும் இலக்கை மாற்றவும்",
+  "stop_navigation": "வழிகாட்டலை நிறுத்து",
+  "pause_simulation": "சிமுலேஷனை இடைநிறுத்து",
+  "resume_simulation": "சிமுலேஷனை தொடரவும்",
+  "unit_km": "கிமீ",
+  "unit_m": "மீ",
+  "min_walk_singular": "1 நிமிடம் நடை",
+  "min_walk_plural": "{minutes} நிமிடம் நடை",
+  "via_prefix": "வழியாக",
+  "floor_short_prefix": "F",
+  "manual_nav_started": "கைமுறை வழிகாட்டல் தொடங்கியது. நடக்கத் தொடங்குங்கள்.",
+
+  "nav": {
+    "start_at": [
+      "{location} இல் தொடங்கு",
+      "{location} இலிருந்து புறப்படுங்கள்"
+    ],
+    "in_meters_action": [
+      "{dist} மீட்டரில், {action}",
+      "{dist} மீட்டர் பிறகு, {action}"
+    ],
+    "next_action": [
+      "அடுத்த இடத்தில் {action}",
+      "அடுத்ததாக {action}"
+    ],
+    "keep_going_then_action": [
+      "நேராகச் செல்லுங்கள், பிறகு {action}",
+      "முன்னால் போய், பின்னர் {action}"
+    ],
+    "arrive_at_dist": [
+      "{dist} மீட்டரில், {location} ஐ அடையுங்கள்",
+      "{location} {dist} மீட்டர் தூரத்தில் உள்ளது"
+    ],
+    "arrived_at": [
+      "நீங்கள் {location} ஐ அடைந்துவிட்டீர்கள்",
+      "{location} க்கு வரவேற்கிறோம்"
+    ],
+    "arrived_at_short": "அடைந்துவிட்டீர்கள்",
+    "turn_left": [
+      "இடது திரும்பு",
+      "இடதுபுறம் செல்லுங்கள்"
+    ],
+    "turn_right": [
+      "வலது திரும்பு",
+      "வலதுபுறம் செல்லுங்கள்"
+    ],
+    "bear_left": [
+      "சிறிது இடது திரும்பு",
+      "லேசாக இடதுபுறம்"
+    ],
+    "bear_right": [
+      "சிறிது வலது திரும்பு",
+      "லேசாக வலதுபுறம்"
+    ],
+    "continue_straight": [
+      "நேராக தொடரவும்",
+      "நேராக செல்லுங்கள்"
+    ],
+    "go_to_floor": [
+      "தளம் {floor} க்கு செல்லுங்கள்"
+    ],
+    "near_landmark": " {landmark} அருகில்",
+    "your_location": "உங்கள் இடம்"
+  }
+}
